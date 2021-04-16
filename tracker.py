@@ -15,7 +15,7 @@ def get_tweets(username):
             last_made_tweet = status.text
             if any(x in last_made_tweet.lower() for x in check_coin_in_tweet):
                 print("Has doge in last_made_tweet\n")
-                send_message(chat_id=chat_id, msg=f'{username} Tweet :\n{last_made_tweet}')
+                send_message(chat_id=chat_id, msg= username+ 'Tweet :\n' +last_made_tweet)
 
 def get_updates():
     url = url_with_token + "getUpdates"
@@ -75,7 +75,7 @@ def wx_get_btc_price(looky_for):
     return float(doge_price['last']), float(xrp_price['last'])
 
 def send_message(chat_id, msg):
-    url = f"https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={msg}"
+    url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
     requests.get(url)
 
 def pricer():
@@ -86,14 +86,14 @@ def pricer():
     # xrp_price_list.append(xrp_price)
 
     if doge_price > doge_high:
-        send_message(chat_id=chat_id, msg=f'DOGE Price Spike Alert: {doge_price}')
+        send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ doge_price)
     if doge_price < doge_low:
-        send_message(chat_id=chat_id, msg=f'DOGE Price Drop Alert: {doge_price}')
+        send_message(chat_id=chat_id, msg='DOGE Price Drop Alert: '+ doge_price)
     
     if xrp_price > xrp_high:
-        send_message(chat_id=chat_id, msg=f'XRP Price Spike Alert: {xrp_price}')
+        send_message(chat_id=chat_id, msg='XRP Price Spike Alert: '+ xrp_price)
     if xrp_price < xrp_low:
-        send_message(chat_id=chat_id, msg=f'XRP Price Drop Alert: {xrp_price}')
+        send_message(chat_id=chat_id, msg='XRP Price Drop Alert: '+ xrp_price)
     
     get_tweets(user_name)
     #send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
