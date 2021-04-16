@@ -69,7 +69,7 @@ def wx_get_btc_price(looky_for):
     try:
         response = requests.get(url)
     except requests.exceptions.ConnectionError as e:
-        print("No response")
+        print("No wazirx response")
         return float(0), float(0)
     response_json = response.json()
     doge_price = response_json[looky_for[0]]
@@ -80,7 +80,10 @@ def wx_get_btc_price(looky_for):
 
 def send_message(chat_id, msg):
     url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
-    requests.get(url)
+    try:
+        requests.get(url)
+    except requests.exceptions.ConnectionError as e:
+        print("No telegram response")
 
 def pricer():
     global price_list_doge, price_list_xrp
