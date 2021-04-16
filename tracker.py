@@ -1,4 +1,5 @@
 from params import *
+from init import *
 import tweepy
 import requests
 import time
@@ -6,13 +7,15 @@ import json
 
 # Function to extract tweets
 def get_tweets(username):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
+    global last_made_tweet, check_coin_in_tweet
 
-    number_of_tweets = 5
     for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=None, since_id=None, max_id=None, trim_user=True, exclude_replies=True, contributor_details=False, include_entities=False).items(number_of_tweets):
-        print(status.text+"\n<------------------------------->\n")
+        print(status.text+"\n")
+        if(last_made_tweet != status.text):
+            last_made_tweet = status.text
+            if any(x in last_made_tweet.lower() for x in check_coin_in_tweet):
+                print("Has doge in last_made_tweet\n")
+                send_message(chat_id=chat_id, msg=f'{username} Tweet :\n{last_made_tweet}')
 
 def get_updates():
     url = url_with_token + "getUpdates"
@@ -82,15 +85,11 @@ def pricer():
 
     if price > highball:
         send_message(chat_id=chat_id, msg=f'{coin_name} Price Spike Alert: {price}')
-    
     if price < lowball:
         send_message(chat_id=chat_id, msg=f'{coin_name} Price Drop Alert: {price}')
     
-    get_tweets('@elonmusk')
-    send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
-    # if len(price_list) >= ping_amount:
-    #     send_message(chat_id=chat_id, msg=f'{coin_name} Price List: {price_list}')
-    #     price_list = []
+    get_tweets(user_name)
+    #send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
 
 def teleg():
     text = get_last_chat_id_and_text(get_updates())
