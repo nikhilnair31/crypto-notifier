@@ -66,7 +66,11 @@ def cg_get_btc_price():
 # make a request to the wazirx api
 def wx_get_btc_price(looky_for):
     url = wazirx_url
-    response = requests.get(url)
+    try:
+        response = requests.get(url)
+    except requests.exceptions.ConnectionError as e:
+        print("No response")
+        return float(0), float(0)
     response_json = response.json()
     doge_price = response_json[looky_for[0]]
     xrp_price = response_json[looky_for[1]]
