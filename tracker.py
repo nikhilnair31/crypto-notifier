@@ -77,23 +77,15 @@ def wx_get_btc_price(looky_for):
     response_json = response.json()
     doge_price = response_json[looky_for[0]]
     xrp_price = response_json[looky_for[1]]
-    # print(doge_price, xrp_price)
     print(doge_price['last'], xrp_price['last'])
     return float(doge_price['last']), float(xrp_price['last'])
 
 def send_message(chat_id, msg):
     url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
-    try:
-        requests.get(url)
-    except requests.exceptions.ConnectionError as e:
-        print("No telegram response")
+    requests.get(url)
 
 def pricer():
-    global price_list_doge, price_list_xrp
-
     doge_price, xrp_price = wx_get_btc_price(looky_for)
-    # doge_price_list.append(doge_price)
-    # xrp_price_list.append(xrp_price)
 
     if doge_price > doge_high:
         send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ str(doge_price))
@@ -106,7 +98,6 @@ def pricer():
         send_message(chat_id=chat_id, msg='XRP Price Drop Alert: '+ str(xrp_price))
     
     get_tweets(user_name)
-    #send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
 
 def teleg():
     text = get_last_chat_id_and_text(get_updates())
@@ -116,10 +107,6 @@ def teleg():
     print(text)
 
 def main():
-    global price_list_doge, price_list_xrp
-
-    price_list_doge = []
-    price_list_xrp = []
     last_textchat = None
     while True:
         #teleg()
