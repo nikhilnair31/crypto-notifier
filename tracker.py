@@ -86,14 +86,14 @@ def pricer():
     # xrp_price_list.append(xrp_price)
 
     if doge_price > doge_high:
-        send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ doge_price)
+        send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ str(doge_price))
     if doge_price < doge_low:
-        send_message(chat_id=chat_id, msg='DOGE Price Drop Alert: '+ doge_price)
+        send_message(chat_id=chat_id, msg='DOGE Price Drop Alert: '+ str(doge_price))
     
     if xrp_price > xrp_high:
-        send_message(chat_id=chat_id, msg='XRP Price Spike Alert: '+ xrp_price)
+        send_message(chat_id=chat_id, msg='XRP Price Spike Alert: '+ str(xrp_price))
     if xrp_price < xrp_low:
-        send_message(chat_id=chat_id, msg='XRP Price Drop Alert: '+ xrp_price)
+        send_message(chat_id=chat_id, msg='XRP Price Drop Alert: '+ str(xrp_price))
     
     get_tweets(user_name)
     #send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
