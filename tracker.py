@@ -64,29 +64,36 @@ def cg_get_btc_price():
     return btc_price['current_price']
 
 # make a request to the wazirx api
-def wx_get_btc_price():
+def wx_get_btc_price(looky_for):
     url = wazirx_url
     response = requests.get(url)
     response_json = response.json()
-    btc_price = response_json['dogeinr']
-    # print(btc_price)
-    print(btc_price['last'])
-    return float(btc_price['last'])
+    doge_price = response_json[looky_for[0]]
+    xrp_price = response_json[looky_for[1]]
+    # print(doge_price, xrp_price)
+    print(doge_price['last'], xrp_price['last'])
+    return float(doge_price['last']), float(xrp_price['last'])
 
 def send_message(chat_id, msg):
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={chat_id}&text={msg}"
     requests.get(url)
 
 def pricer():
-    global price_list
+    global price_list_doge, price_list_xrp
 
-    price = wx_get_btc_price()
-    price_list.append(price)
+    doge_price, xrp_price = wx_get_btc_price(looky_for)
+    # doge_price_list.append(doge_price)
+    # xrp_price_list.append(xrp_price)
 
-    if price > highball:
-        send_message(chat_id=chat_id, msg=f'{coin_name} Price Spike Alert: {price}')
-    if price < lowball:
-        send_message(chat_id=chat_id, msg=f'{coin_name} Price Drop Alert: {price}')
+    if doge_price > doge_high:
+        send_message(chat_id=chat_id, msg=f'DOGE Price Spike Alert: {doge_price}')
+    if doge_price < doge_low:
+        send_message(chat_id=chat_id, msg=f'DOGE Price Drop Alert: {doge_price}')
+    
+    if xrp_price > xrp_high:
+        send_message(chat_id=chat_id, msg=f'XRP Price Spike Alert: {xrp_price}')
+    if xrp_price < xrp_low:
+        send_message(chat_id=chat_id, msg=f'XRP Price Drop Alert: {xrp_price}')
     
     get_tweets(user_name)
     #send_message(chat_id=chat_id, msg=f'{coin_name} Price : {price}')
@@ -99,9 +106,10 @@ def teleg():
     print(text)
 
 def main():
-    global price_list
+    global price_list_doge, price_list_xrp
 
-    price_list = []
+    price_list_doge = []
+    price_list_xrp = []
     last_textchat = None
     while True:
         #teleg()

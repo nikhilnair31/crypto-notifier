@@ -7,18 +7,22 @@ chat_id = '803618321'
 user_name = '@elonmusk'
 number_of_tweets = 1
 last_made_tweet = ''
-check_coin_in_tweet = ['doge', 'coin', 'austin']
+check_coin_in_tweet = ['doge', 'DOGE', 'ripple', 'XRP', 'coin', 'crypto', 'currency']
 consumer_key = "qboeodsSEEVY8mz8b8t5fsu9y" 
 consumer_secret = "hu7acIT64TEejNf9bPvysB9mwadjssqmD8ny3eE1jcuyyFxsy9"
 access_key = "2441129845-KIw0UFenFwpZToRAWUHqUGPXFhc2jd6KKNMNyCz"
 access_secret = "qGs6FHGLQ071zm6vcM8muF1PI9eO0jFIelHQC8HL6oHI5"
 
-# coin params
-coin_name = 'DOGE'
-highball = 25
-lowball = 20
+# update params
 update_rate = 0.5
 time_interval = update_rate * 60
+
+# coin params
+looky_for = ['dogeinr', 'xrpinr']
+doge_high = 25
+doge_low = 20
+xrp_high = 150
+xrp_low = 90
 
 # urls
 coin_api_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
