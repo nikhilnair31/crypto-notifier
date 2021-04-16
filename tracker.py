@@ -8,17 +8,13 @@ import json
 # Function to extract tweets
 def get_tweets(username):
     global last_made_tweet, check_coin_in_tweet
-
-    try:
-        for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=None, since_id=None, max_id=None, trim_user=True, exclude_replies=True, contributor_details=False, include_entities=False).items(number_of_tweets):
-            print(status.text+"\n")
-            if(last_made_tweet != status.text):
-                last_made_tweet = status.text
-                if any(x in last_made_tweet.lower() for x in check_coin_in_tweet):
-                    print("Has doge in last_made_tweet\n")
-                    send_message(chat_id=chat_id, msg= username+ 'Tweet :\n' +last_made_tweet)
-    except requests.exceptions.ConnectionError as e:
-        print("No twitter response")
+    for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=None, since_id=None, max_id=None, trim_user=True, exclude_replies=True, contributor_details=False, include_entities=False).items(number_of_tweets):
+        print(status.text+"\n")
+        if(last_made_tweet != status.text):
+            last_made_tweet = status.text
+            if any(x in last_made_tweet.lower() for x in check_coin_in_tweet):
+                print("Has doge in last_made_tweet\n")
+                send_message(chat_id=chat_id, msg= username+ 'Tweet :\n' +last_made_tweet)
 
 def get_updates():
     url = url_with_token + "getUpdates"
@@ -69,11 +65,7 @@ def cg_get_btc_price():
 # make a request to the wazirx api
 def wx_get_btc_price(looky_for):
     url = wazirx_url
-    try:
-        response = requests.get(url)
-    except requests.exceptions.ConnectionError as e:
-        print("No wazirx response")
-        return float(0), float(0)
+    response = requests.get(url)
     response_json = response.json()
     doge_price = response_json[looky_for[0]]
     xrp_price = response_json[looky_for[1]]
@@ -109,7 +101,6 @@ def teleg():
 def main():
     last_textchat = None
     while True:
-        #teleg()
         pricer()
         time.sleep(time_interval)
 
