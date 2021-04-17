@@ -1,5 +1,4 @@
-from params import *
-from init import *
+import params
 
 import sys
 import tweepy
@@ -7,25 +6,32 @@ import requests
 import time
 import json
 
+# initialize twitter api
+def init_twitter():
+    global api
+    auth = tweepy.OAuthHandler(params.consumer_key, params.consumer_secret)
+    auth.set_access_token(params.access_key, params.access_secret)
+    api = tweepy.API(auth)
+
 # message from bot to user
-def send_message(chat_id, msg):
-    url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
+def send_message(msg):
+    url = 'https://api.telegram.org/bot'+params.bot_token+'/sendMessage?chat_id='+params.chat_id+'&text='+msg
     requests.get(url)
 
 # Function to extract tweets
 def get_tweets(username):
-    global last_made_tweet, check_coin_in_tweet
-    for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=None, since_id=None, max_id=None, trim_user=True, exclude_replies=True, contributor_details=False, include_entities=False).items(number_of_tweets):
+    global api
+    for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=None, since_id=None, max_id=None, trim_user=True, exclude_replies=True, contributor_details=False, include_entities=False).items(1):
         print('most recent status.text;\n', status.text+"\n")
-        if(last_made_tweet != status.text):
-            last_made_tweet = status.text
-            if any(x in last_made_tweet.lower() for x in check_coin_in_tweet):
-                print("Has doge in last_made_tweet\n")
-                send_message(chat_id=chat_id, msg= username+ 'Tweet :\n' +last_made_tweet)
+        if(params.last_made_tweet != status.text):
+            params.last_made_tweet = status.text
+            if any(x in params.last_made_tweet.lower() for x in params.check_coin_in_tweet):
+                print("Has doge in params.last_made_tweet\n")
+                send_message(msg = username+ 'Tweet :\n' +params.last_made_tweet)
 
 # make a request to the wazirx api
 def wx_get_btc_price(doge_looky):
-    url = wazirx_url
+    url = params.wazirx_url
     response = requests.get(url)
     response_json = response.json()
     doge_price = response_json[doge_looky]
@@ -34,25 +40,23 @@ def wx_get_btc_price(doge_looky):
 
 # compare prices with limits
 def pricer():
-    doge_price = wx_get_btc_price(doge_looky)
+    doge_price = wx_get_btc_price(params.doge_looky)
     print('doge_price: ', doge_price)
-    print('doge_low: ', doge_low)
-    print('doge_high: ', doge_high)
+    print('params.doge_low: ', params.doge_low)
+    print('params.doge_high: ', params.doge_high)
 
-    if doge_price > doge_high:
-        send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ str(doge_price))
-    if doge_price < doge_low:
-        send_message(chat_id=chat_id, msg='DOGE Price Drop Alert: '+ str(doge_price))
+    if doge_price > params.doge_high:
+        send_message(msg='DOGE Price Spike Alert: '+ str(doge_price))
+    if doge_price < params.doge_low:
+        send_message(msg='DOGE Price Drop Alert: '+ str(doge_price))
     
-    get_tweets(user_name)
+    get_tweets(params.user_name)
 
 def main():
-    global updater
-    last_textchat = None
-
+    init_twitter()
     while True:
         pricer()
-        time.sleep(time_interval)
+        time.sleep(params.time_interval)
 
 if __name__ == '__main__':
     main()
