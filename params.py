@@ -1,4 +1,4 @@
-# coin market keys
+# telegram bot keys
 api_key = 'd3a0e65f-a376-4512-80c1-1472391a929c'
 bot_token = '1697782782:AAH5FsAWh7UBSMZcr0O7iYI2yX35cnJVus8'
 chat_id = '803618321'
@@ -14,6 +14,7 @@ access_key = "2441129845-KIw0UFenFwpZToRAWUHqUGPXFhc2jd6KKNMNyCz"
 access_secret = "qGs6FHGLQ071zm6vcM8muF1PI9eO0jFIelHQC8HL6oHI5"
 
 # update params
+start_loop = False
 update_rate = 0.1
 time_interval = update_rate * 60
 

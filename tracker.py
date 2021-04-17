@@ -1,9 +1,17 @@
 from params import *
 from init import *
+
+import sys
 import tweepy
 import requests
 import time
 import json
+
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext, MessageHandler, Filters, Dispatcher
+from telegram.callbackquery import CallbackQuery
+from telegram.update import Update
+from telegram.message import Message
 
 # Function to extract tweets
 def get_tweets(username):
@@ -16,52 +24,6 @@ def get_tweets(username):
                 print("Has doge in last_made_tweet\n")
                 send_message(chat_id=chat_id, msg= username+ 'Tweet :\n' +last_made_tweet)
 
-def get_updates():
-    url = url_with_token + "getUpdates"
-    response = requests.get(url)
-    content = response.content.decode("utf8")
-    js = json.loads(content)
-    return js
-
-def get_last_chat_id_and_text(updates):
-    num_updates = len(updates["result"])
-    last_update = num_updates - 1
-    text = updates["result"][last_update]["message"]["text"]
-    chat_id = updates["result"][last_update]["message"]["chat"]["id"]
-    return text
-
-# make a request to the coinmarketcap api
-def cm_get_btc_price():
-    url = coin_api_url
-    headers = {
-        'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': api_key
-    }
-    parameters = {
-        'start':'1',
-        'limit':'20',
-        'convert':'USD',
-        'sort':'symbol',
-    }
-    
-    # make a request to the coinmarketcap api
-    response = requests.get(url, headers=headers, params=parameters)
-    response_json = response.json()
-    print(response_json)
-    # extract the bitcoin price from the json data
-    btc_price = response_json['data'][0]
-    print(btc_price['quote']['USD']['price'])
-    return btc_price['quote']['USD']['price']
-
-# make a request to the coingecko api
-def cg_get_btc_price():
-    url = gecko_api_url
-    response = requests.get(url)
-    response_json = response.json()
-    btc_price = response_json[0]
-    print(btc_price['current_price'])
-    return btc_price['current_price']
-
 # make a request to the wazirx api
 def wx_get_btc_price(doge_looky):
     url = wazirx_url
@@ -71,10 +33,12 @@ def wx_get_btc_price(doge_looky):
     print(doge_price['last'])
     return float(doge_price['last'])
 
+# message from bot to user
 def send_message(chat_id, msg):
     url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
     requests.get(url)
 
+# compare prices with limits
 def pricer():
     doge_price = wx_get_btc_price(doge_looky)
 
@@ -85,15 +49,48 @@ def pricer():
     
     get_tweets(user_name)
 
-def teleg():
-    text = get_last_chat_id_and_text(get_updates())
-    if text != last_textchat:
-        send_message(text, chat_id)
-        last_textchat = text
-    print(text)
+# send_message() on command /help
+def see_help(update: Update, context: CallbackContext):
+    send_message(chat_id=chat_id, msg= 'This is your help?')
+
+# send_message() on command /check_params
+def check_params(update: Update, context: CallbackContext):
+    global doge_looky, doge_low, doge_high
+    send_message(chat_id=chat_id, msg= 'doge_looky: '+str(doge_looky)+'\ndoge_low: '+str(doge_low)+'\ndoge_high: '+str(doge_high))
+
+# send_message() on command /check_params
+def set_doge_limits(update, context):
+    command = context.args[0].lower()
+    print('command: ', command)
+    context.user_data[set_doge_limits] = command
+    if("upper" == command):
+        send_message(chat_id=chat_id, msg= "Selected upper limit\nType upper limit amount")
+    elif("lower" == command):
+        send_message(chat_id=chat_id, msg= "Selected lower limit\nType lower limit amount")
+
+# change values of limits on text
+def price_changer(update, context):
+    global doge_high, doge_low
+    print('context.user_data[set_doge_limits]: ',context.user_data[set_doge_limits])
+    send_message(chat_id=chat_id, msg= 'Set '+str(context.user_data[set_doge_limits])+' limit to ₹'+str(float(update.message.text)))
+    if ("upper" == context.user_data[set_doge_limits]):
+        doge_high = float(update.message.text)
+    elif ("lower" == context.user_data[set_doge_limits]):
+        doge_low = float(update.message.text)
 
 def main():
+    global updater
     last_textchat = None
+
+    updater = Updater(bot_token, use_context=True)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(CommandHandler('help', see_help))
+    dispatcher.add_handler(CommandHandler('check_params', check_params))
+    dispatcher.add_handler(CommandHandler('set_doge_limits', set_doge_limits))
+    dispatcher.add_handler(MessageHandler(Filters.text, price_changer))
+    updater.start_polling()
+    # updater.idle()
+
     while True:
         pricer()
         time.sleep(time_interval)
