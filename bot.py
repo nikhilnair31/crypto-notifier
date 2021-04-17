@@ -12,7 +12,7 @@ from telegram.callbackquery import CallbackQuery
 from telegram.update import Update
 from telegram.message import Message
 
-UPPERORLOWER, UPDATELIMITS, UPDATERATE = range(1)
+UPPERORLOWER, UPDATELIMITS, UPDATERATE = range(3)
 
 # called to open json file and dump params.doge_limits
 def save_to_json_file():
@@ -50,27 +50,24 @@ def stop_tracker(update, context):
     print('stop_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())
 
 # send_message() on command /check_params
-def set_doge_limits(update, context):
-    keyboard = [[InlineKeyboardButton("Upper Limit", callback_data='upper'), InlineKeyboardButton("Lower Limit", callback_data='lower') ]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
-    pass
+def set_doge_limits(update: Update, _: CallbackContext) -> int:
+    reply_keyboard1 = [['upper'], ['lower']]
+    update.message.reply_text('Pick which limit to edit\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True))
+    return UPPERORLOWER
 
-def upper_lower_button(update, context):
+def upper_lower_button(update: Update, _: CallbackContext) -> int:
     global selected_option
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text="Selected option: {} limit\nProceed with entering a value for the same".format(query.data))
-    selected_option = query.data
+    selected_option = update.message.text
+    print("upper_lower_button update.message.text", update.message.text)
+    update.message.reply_text('Editing {} limit\nEnter value for limit\n'.format(update.message.text))
+    return UPDATELIMITS
 
 # change values of limits on text
-def price_changer(update, context):
+def price_changer(update: Update, _: CallbackContext) -> int:
     global selected_option
-    
     print('selected_option: ', selected_option)
-    print('update.message.text: ', update.message.text)
-    update.message.reply_text('Set '+str(selected_option)+' limit to ₹'+str(float(update.message.text)))
-
+    print("price_changer update.message.text", update.message.text)
+    update.message.reply_text('Set limit to ₹{}\n'.format(update.message.text))
     if ("upper" == selected_option):
         print('og params.doge_limits["doge_high"]: ', params.doge_limits["doge_high"])
         params.doge_limits["doge_high"] = float(update.message.text)
@@ -80,6 +77,7 @@ def price_changer(update, context):
         params.doge_limits["doge_low"] = float(update.message.text)
         print('updated  params.doge_limits["doge_low"]: ',  params.doge_limits["doge_low"])
     save_to_json_file()
+    return ConversationHandler.END
 
 # send_message() on command /check_params
 def set_update_rate(update: Update, _: CallbackContext) -> int:
@@ -113,14 +111,12 @@ def main():
     dispatcher.add_handler(CommandHandler('help', see_help))
     dispatcher.add_handler(CommandHandler('check_params', check_params))
 
-    # dispatcher.add_handler(CommandHandler('set_doge_limits', set_doge_limits, pass_args=True), group=0)
-    # dispatcher.add_handler(CallbackQueryHandler(upper_lower_button), group=0)
-    # dispatcher.add_handler(MessageHandler(Filters.text, price_changer), group=0)
-    # conv_handler1 = ConversationHandler(
-    #     entry_points=[CommandHandler('set_doge_limits', set_doge_limits)],
-    #     states={UPPERORLOWER: [MessageHandler(Filters.text, update_rate_value)], UPDATELIMITS: [MessageHandler(Filters.text, update_rate_value)]},
-    #     fallbacks=[CommandHandler('cancel', cancel)]
-    # )
+    conv_handler1 = ConversationHandler(
+        entry_points=[CommandHandler('set_doge_limits', set_doge_limits)],
+        states={UPPERORLOWER: [MessageHandler(Filters.text, upper_lower_button)], 
+                UPDATELIMITS: [MessageHandler(Filters.text, price_changer)]},
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
     dispatcher.add_handler(conv_handler1)
     conv_handler2 = ConversationHandler(
         entry_points=[CommandHandler('set_update_rate', set_update_rate)],
