@@ -20,8 +20,8 @@ time_interval = update_rate * 60
 
 # coin params
 doge_looky = 'dogeinr'
-doge_high = 25
-doge_low = 20
+doge_high = 30
+doge_low = 25
 
 # urls
 coin_api_url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
