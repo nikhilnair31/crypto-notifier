@@ -63,31 +63,25 @@ def cg_get_btc_price():
     return btc_price['current_price']
 
 # make a request to the wazirx api
-def wx_get_btc_price(looky_for):
+def wx_get_btc_price(doge_looky):
     url = wazirx_url
     response = requests.get(url)
     response_json = response.json()
-    doge_price = response_json[looky_for[0]]
-    xrp_price = response_json[looky_for[1]]
-    print(doge_price['last'], xrp_price['last'])
-    return float(doge_price['last']), float(xrp_price['last'])
+    doge_price = response_json[doge_looky]
+    print(doge_price['last'])
+    return float(doge_price['last'])
 
 def send_message(chat_id, msg):
     url = 'https://api.telegram.org/bot'+bot_token+'/sendMessage?chat_id='+chat_id+'&text='+msg
     requests.get(url)
 
 def pricer():
-    doge_price, xrp_price = wx_get_btc_price(looky_for)
+    doge_price = wx_get_btc_price(doge_looky)
 
     if doge_price > doge_high:
         send_message(chat_id=chat_id, msg='DOGE Price Spike Alert: '+ str(doge_price))
     if doge_price < doge_low:
         send_message(chat_id=chat_id, msg='DOGE Price Drop Alert: '+ str(doge_price))
-    
-    if xrp_price > xrp_high:
-        send_message(chat_id=chat_id, msg='XRP Price Spike Alert: '+ str(xrp_price))
-    if xrp_price < xrp_low:
-        send_message(chat_id=chat_id, msg='XRP Price Drop Alert: '+ str(xrp_price))
     
     get_tweets(user_name)
 
