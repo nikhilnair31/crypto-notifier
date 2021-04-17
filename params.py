@@ -28,4 +28,4 @@ check_coin_in_tweet = ['doge', 'DOGE', 'ripple', 'XRP', 'coin', 'crypto', 'curre
 # coin params
 doge_looky = 'dogeinr'
 doge_high = 30
-doge_low = 25
+doge_low = 20

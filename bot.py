@@ -1,4 +1,9 @@
 import params
+import os
+import sys
+import signal
+import tracker
+import subprocess
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, ConversationHandler, CommandHandler, CallbackQueryHandler, CallbackContext, MessageHandler, Filters, Dispatcher
@@ -11,8 +16,25 @@ def see_help(update: Update, context: CallbackContext):
     update.message.reply_text('This is your help?')
 
 # send_message() on command /check_params
-def check_params(update: Update, context: CallbackContext):
+def check_params(update, context):
     update.message.reply_text('doge_looky: '+str(params.doge_looky)+'\ndoge_low: '+str(params.doge_low)+'\ndoge_high: '+str(params.doge_high))
+
+# start tracker
+def start_tracker(update, context):
+    global tracker_subprocess
+    update.message.reply_text('Started tracker')
+    tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'])
+    # tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'], stdout=subprocess.PIPE, shell=True)
+    print("Started process: ", tracker_subprocess.pid)
+    print('start_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())
+
+# stop tracker
+def stop_tracker(update, context):
+    global tracker_subprocess
+    update.message.reply_text('Stopped tracker')
+    print("Killing process: ", tracker_subprocess.pid)
+    tracker_subprocess.kill()
+    print('stop_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())
 
 # send_message() on command /check_params
 def set_doge_limits(update, context):
