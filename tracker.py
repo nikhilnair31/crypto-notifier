@@ -30,27 +30,30 @@ def get_tweets(username):
                 send_message(msg = username+ 'Tweet :\n' +params.last_made_tweet)
 
 # make a request to the wazirx api
-def wx_get_btc_price(doge_looky):
+def wx_get_btc_price(coin_looky):
     url = params.wazirx_url
     response = requests.get(url)
     response_json = response.json()
-    doge_price = response_json[doge_looky]
+    doge_price = response_json[coin_looky]
     print('wx_get_btc_price doge_price[last]: ', doge_price['last'])
     return float(doge_price['last'])
 
 # compare prices with limits
 def pricer():
-    doge_price = wx_get_btc_price(params.doge_looky)
-    print('doge_price: ', doge_price)
-    print('params.doge_low: ', params.doge_low)
-    print('params.doge_high: ', params.doge_high)
+    doge_price = wx_get_btc_price(params.coin_looky)
 
-    if doge_price > params.doge_high:
-        send_message(msg='DOGE Price Spike Alert: '+ str(doge_price))
-    if doge_price < params.doge_low:
-        send_message(msg='DOGE Price Drop Alert: '+ str(doge_price))
-    
-    get_tweets(params.user_name)
+    with open("editable_params.json") as jsonFile:
+        data = json.load(jsonFile)
+        print('doge_price: ', doge_price)
+        print('data["doge_low"]: ', data["doge_low"])
+        print('data["doge_high"]: ', data["doge_high"])
+
+        if doge_price > data["doge_high"]:
+            send_message(msg='DOGE Price Spike Alert: '+ str(doge_price))
+        if doge_price < data["doge_low"]:
+            send_message(msg='DOGE Price Drop Alert: '+ str(doge_price))
+        
+        get_tweets(params.user_name)
 
 def main():
     init_twitter()

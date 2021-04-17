@@ -26,6 +26,9 @@ last_made_tweet = ''
 check_coin_in_tweet = ['doge', 'DOGE', 'ripple', 'XRP', 'coin', 'crypto', 'currency']
 
 # coin params
-doge_looky = 'dogeinr'
+coin_looky = 'dogeinr'
 doge_high = 30
 doge_low = 20
+
+# coin params
+doge_limits = {"coin_looky": "dogeinr", "doge_high" : 30.0, "doge_low" : 20.0, "update_rate" : 0.1}
