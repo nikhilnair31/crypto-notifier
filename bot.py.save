@@ -27,9 +27,8 @@ def see_help(update: Update, context: CallbackContext):
 
 # send_message() on command /check_params
 def check_params(update, context):
-    fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/editable_params.json'))
-    filename = os.path.join(fileDir, 'editable_params.json')
-    with open(filename) as jsonFile:
+    
+muwith open("editable_params.json") as jsonFile:
         data = json.load(jsonFile)
         update.message.reply_text('coin_looky: '+str(data["coin_looky"])+
             '\ndoge_low: '+str(data["doge_low"])+
@@ -40,9 +39,7 @@ def check_params(update, context):
 def start_tracker(update, context):
     global tracker_subprocess
     update.message.reply_text('Started tracker')
-    fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/tracker.py'))
-    filename = os.path.join(fileDir, 'tracker.py')
-    tracker_subprocess = subprocess.Popen([sys.executable, filename])
+    tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'])
     # tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'], stdout=subprocess.PIPE, shell=True)
     print("Started process: ", tracker_subprocess.pid)
     print('start_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())

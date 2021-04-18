@@ -1,5 +1,6 @@
 import params
 
+import os
 import sys
 import tweepy
 import requests
@@ -41,8 +42,9 @@ def wx_get_btc_price(coin_looky):
 # compare prices with limits
 def pricer():
     doge_price = wx_get_btc_price(params.coin_looky)
-
-    with open("editable_params.json") as jsonFile:
+    fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/editable_params.json'))
+    filename = os.path.join(fileDir, 'editable_params.json')
+    with open(filename) as jsonFile:
         data = json.load(jsonFile)
         print('doge_price: ', doge_price)
         print('data["doge_low"]: ', data["doge_low"])
