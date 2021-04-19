@@ -21,31 +21,32 @@ def save_to_json_file():
     with open(filename, "w") as outfile:
         json.dump(params.doge_limits, outfile)
 
-# send_message() on command /help
+# reply text on command /help
 def see_help(update: Update, context: CallbackContext):
-    update.message.reply_text('This is your help?')
+    update.message.reply_text(f'get_params: Gives details about coin being tracked like name, price limits and update rate'
+        f'set_coin_name: Pick which coin to track'
+            f'set_update_rate: Rate at which prices are updated for coin'
+                f'set_price_limits: Set upper/lower absolute price limits for coin'
+                    f'start_tracker: Start tracking coin prices'
+                        f'stop_tracker: Stop tracking coin prices')
 
-# send_message() on command /check_params
-def check_params(update, context):
+# reply text on command /get_params
+def get_params(update, context):
     fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/editable_params.json'))
     filename = os.path.join(fileDir, 'editable_params.json')
     with open(filename) as jsonFile:
         data = json.load(jsonFile)
-        update.message.reply_text('coin_name: '+str(data["coin_name"])+
-            '\nlimit_low: '+str(data["limit_low"])+
-                '\nlimit_high: '+str(data["limit_high"])+
-                    '\nupdate_rate: '+str(data["update_rate"]))
+        update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"])}\n'
+            f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
 
 # start tracker
 def start_tracker(update, context):
     global tracker_subprocess
-    update.message.reply_text(f'Started tracker')
+    update.message.reply_text(f'Started tracker for coin')
     fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/tracker.py'))
     filename = os.path.join(fileDir, 'tracker.py')
     tracker_subprocess = subprocess.Popen([sys.executable, filename])
-    # tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'], stdout=subprocess.PIPE, shell=True)
-    print(f'Started process: {tracker_subprocess.pid}')
-    print(f'start_tracker tracker_subprocess.poll(): {tracker_subprocess.poll()}')
+    print(f'Started process: {tracker_subprocess.pid}\nstart_tracker tracker_subprocess.poll(): {tracker_subprocess.poll()}')
 
 # stop tracker
 def stop_tracker(update, context):
@@ -55,8 +56,8 @@ def stop_tracker(update, context):
     tracker_subprocess.kill()
     print(f'stop_tracker tracker_subprocess.poll(): {tracker_subprocess.poll()}')
 
-# send_message() on command /check_params
-def set_doge_limits(update: Update, _: CallbackContext) -> int:
+# send_message() on command /set_price_limits
+def set_price_limits(update: Update, _: CallbackContext) -> int:
     reply_keyboard1 = [['upper'], ['lower']]
     update.message.reply_text(f'Pick which limit to edit\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True))
     return UPPERORLOWER
@@ -130,10 +131,10 @@ def main():
     dispatcher.add_handler(CommandHandler('start_tracker', start_tracker))
     dispatcher.add_handler(CommandHandler('stop_tracker', stop_tracker))
     dispatcher.add_handler(CommandHandler('help', see_help))
-    dispatcher.add_handler(CommandHandler('check_params', check_params))
+    dispatcher.add_handler(CommandHandler('get_params', get_params))
 
     conv_handler1 = ConversationHandler(
-        entry_points=[CommandHandler('set_doge_limits', set_doge_limits)],
+        entry_points=[CommandHandler('set_price_limits', set_price_limits)],
         states={UPPERORLOWER: [MessageHandler(Filters.text, upper_lower_button)], 
                 UPDATELIMITS: [MessageHandler(Filters.text, price_changer)]},
         fallbacks=[CommandHandler('cancel', cancel)]
