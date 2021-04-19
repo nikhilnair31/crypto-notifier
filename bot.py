@@ -107,7 +107,7 @@ def set_coin_name(update: Update, _: CallbackContext) -> int:
 def coin_name_value(update: Update, _: CallbackContext) -> int:
     # print("update.message.text", update.message.text)
     update.message.reply_text(f'Coin name updated to {update.message.text}\n')
-    params.doge_limits["coin_looky"] = float(update.message.text)
+    params.doge_limits["coin_looky"] = update.message.text
     save_to_json_file()
     return ConversationHandler.END
 
