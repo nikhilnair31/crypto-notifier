@@ -35,5 +35,5 @@ limit_low = 20
 # coin params
 doge_limits = {"coin_name": "dogeinr", "limit_high" : 30.0, "limit_low" : 20.0, "update_rate" : 0.1}
 
-dir = os.path.dirname('./Projects/crypto-notifier/editable_params.json')
+dir = os.path.dirname('root/Projects/crypto-notifier/editable_params.json')
 filename = os.path.join(dir, 'editable_params.json')

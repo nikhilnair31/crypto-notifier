@@ -16,7 +16,7 @@ UPPERORLOWER, UPDATELIMITS, UPDATERATE, UPDATECOINNAME = range(4)
 
 # called to open json file and dump params.doge_limits
 def save_to_json_file():
-    with open('editable_params.json', "w") as outfile:
+    with open(params.filename, "w") as outfile:
         json.dump(params.doge_limits, outfile)
 
 # reply text on command /help
@@ -30,7 +30,7 @@ def see_help(update: Update, context: CallbackContext):
 
 # reply text on command /get_params by opening and loading json file data
 def get_params(update, context):
-    with open('editable_params.json') as jsonFile:
+    with open(params.filename) as jsonFile:
         data = json.load(jsonFile)
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
