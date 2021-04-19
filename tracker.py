@@ -31,13 +31,13 @@ def get_tweets(username):
                 send_message(msg = f'{username} Tweet :\n{params.last_made_tweet}')
 
 # make a request to the wazirx api
-def wx_get_btc_price(coin_looky):
+def wx_get_btc_price(coin_name):
     url = params.wazirx_url
     response = requests.get(url)
     if('json' in response.headers.get('Content-Type')):
         response_json = response.json()
         print(f'response_json: {response_json}\n')
-        doge_price = response_json[coin_looky]
+        doge_price = response_json[coin_name]
         print(f'wx_get_btc_price doge_price[last]: {doge_price["last"]}')
         return float(doge_price['last'])
     else:
@@ -45,7 +45,7 @@ def wx_get_btc_price(coin_looky):
 
 # compare prices with limits
 def pricer():
-    doge_price = wx_get_btc_price(params.coin_looky)
+    doge_price = wx_get_btc_price(params.coin_name)
     fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/editable_params.json'))
     filename = os.path.join(fileDir, 'editable_params.json')
     with open(filename) as jsonFile:

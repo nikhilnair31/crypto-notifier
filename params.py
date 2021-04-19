@@ -23,12 +23,12 @@ time_interval = update_rate * 60
 # twitter params
 user_name = '@elonmusk'
 last_made_tweet = ''
-check_coin_in_tweet = ['doge', 'DOGE', 'ripple', 'XRP', 'coin', 'crypto', 'currency']
+check_coin_in_tweet = ['moon', 'doge', 'DOGE', 'ripple', 'XRP', 'coin', 'crypto', 'currency']
 
 # coin params
-coin_looky = 'dogeinr'
+coin_name = 'dogeinr'
 limit_high = 30
 limit_low = 20
 
 # coin params
-doge_limits = {"coin_looky": "dogeinr", "limit_high" : 30.0, "limit_low" : 20.0, "update_rate" : 0.1}
+doge_limits = {"coin_name": "dogeinr", "limit_high" : 30.0, "limit_low" : 20.0, "update_rate" : 0.1}

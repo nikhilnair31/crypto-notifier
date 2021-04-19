@@ -31,7 +31,7 @@ def check_params(update, context):
     filename = os.path.join(fileDir, 'editable_params.json')
     with open(filename) as jsonFile:
         data = json.load(jsonFile)
-        update.message.reply_text('coin_looky: '+str(data["coin_looky"])+
+        update.message.reply_text('coin_name: '+str(data["coin_name"])+
             '\nlimit_low: '+str(data["limit_low"])+
                 '\nlimit_high: '+str(data["limit_high"])+
                     '\nupdate_rate: '+str(data["update_rate"]))
@@ -107,7 +107,7 @@ def set_coin_name(update: Update, _: CallbackContext) -> int:
 def coin_name_value(update: Update, _: CallbackContext) -> int:
     # print("update.message.text", update.message.text)
     update.message.reply_text(f'Coin name updated to {update.message.text}\n')
-    params.doge_limits["coin_looky"] = update.message.text
+    params.doge_limits["coin_name"] = update.message.text
     save_to_json_file()
     return ConversationHandler.END
 
