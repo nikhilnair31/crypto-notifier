@@ -36,7 +36,7 @@ def get_params(update, context):
     filename = os.path.join(fileDir, 'editable_params.json')
     with open(filename) as jsonFile:
         data = json.load(jsonFile)
-        update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"])}\n'
+        update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
 
 # start tracker
