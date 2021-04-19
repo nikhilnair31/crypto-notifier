@@ -16,9 +16,7 @@ UPPERORLOWER, UPDATELIMITS, UPDATERATE, UPDATECOINNAME = range(4)
 
 # called to open json file and dump params.doge_limits
 def save_to_json_file():
-    fileDir = os.path.dirname(os.path.realpath('~/Projects/crypto-notifier/editable_params.json'))
-    filename = os.path.join(fileDir, 'editable_params.json')
-    with open(filename, "w") as outfile:
+    with open('editable_params.json', "w") as outfile:
         json.dump(params.doge_limits, outfile)
 
 # reply text on command /help
@@ -32,9 +30,7 @@ def see_help(update: Update, context: CallbackContext):
 
 # reply text on command /get_params by opening and loading json file data
 def get_params(update, context):
-    fileDir = os.path.dirname(os.path.realpath('Projects/crypto-notifier/editable_params.json'))
-    filename = os.path.join(fileDir, 'editable_params.json')
-    with open(filename) as jsonFile:
+    with open('editable_params.json') as jsonFile:
         data = json.load(jsonFile)
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
@@ -43,9 +39,7 @@ def get_params(update, context):
 def start_tracker(update, context):
     global tracker_subprocess
     update.message.reply_text(f'Started tracker for coin')
-    fileDir = os.path.dirname(os.path.realpath('/Projects/crypto-notifier/tracker.py'))
-    filename = os.path.join(fileDir, 'tracker.py')
-    tracker_subprocess = subprocess.Popen([sys.executable, filename])
+    tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'])
     print(f'Started process: {tracker_subprocess.pid}\n\n')
 
 # stop tracker
@@ -121,8 +115,6 @@ def main():
     global updater, selected_option
 
     selected_option = None
-    fileDir = os.path.dirname(os.path.realpath('dev/root/Projects/crypto-notifier/editable_params.json'))
-    filename = os.path.join(fileDir, 'editable_params.json')
     with open('editable_params.json') as jsonFile:
         data = json.load(jsonFile)
         params.doge_limits = data

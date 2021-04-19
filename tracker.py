@@ -46,9 +46,7 @@ def wx_get_btc_price(coin_name):
 # compare prices with limits
 def pricer():
     doge_price = wx_get_btc_price(params.coin_name)
-    fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/editable_params.json'))
-    filename = os.path.join(fileDir, 'editable_params.json')
-    with open(filename) as jsonFile:
+    with open('editable_params.json') as jsonFile:
         data = json.load(jsonFile)
         print(f'doge_price: {doge_price}')
         print(f'data["limit_low"]: {data["limit_low"]}')
