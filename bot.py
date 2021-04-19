@@ -16,7 +16,7 @@ UPPERORLOWER, UPDATELIMITS, UPDATERATE, UPDATECOINNAME = range(4)
 
 # called to open json file and dump params.doge_limits
 def save_to_json_file():
-    with open(params.filename, "w") as outfile:
+    with open(params.editable_params_filename, "w") as outfile:
         json.dump(params.doge_limits, outfile)
 
 # reply text on command /help
@@ -30,7 +30,7 @@ def see_help(update: Update, context: CallbackContext):
 
 # reply text on command /get_params by opening and loading json file data
 def get_params(update, context):
-    with open(params.filename) as jsonFile:
+    with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
@@ -39,7 +39,7 @@ def get_params(update, context):
 def start_tracker(update, context):
     global tracker_subprocess
     update.message.reply_text(f'Started tracker for coin')
-    tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'])
+    tracker_subprocess = subprocess.Popen([sys.executable, params.tracker_filename])
     print(f'Started process: {tracker_subprocess.pid}\n\n')
 
 # stop tracker
@@ -115,7 +115,7 @@ def main():
     global updater, selected_option
 
     selected_option = None
-    with open(params.filename) as jsonFile:
+    with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
         params.doge_limits = data
 

@@ -46,7 +46,7 @@ def wx_get_btc_price(coin_name):
 # compare prices with limits
 def pricer():
     doge_price = wx_get_btc_price(params.coin_name)
-    with open(params.filename) as jsonFile:
+    with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
         print(f'doge_price: {doge_price}')
         print(f'data["limit_low"]: {data["limit_low"]}')

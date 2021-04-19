@@ -35,5 +35,7 @@ limit_low = 20
 # coin params
 doge_limits = {"coin_name": "dogeinr", "limit_high" : 30.0, "limit_low" : 20.0, "update_rate" : 0.1}
 
-dir = os.path.dirname('root/Projects/crypto-notifier/editable_params.json')
-filename = os.path.join(dir, 'editable_params.json')
+dir1 = os.path.dirname('root/Projects/crypto-notifier/editable_params.json')
+editable_params_filename = os.path.join(dir1, 'editable_params.json')
+dir2 = os.path.dirname('root/Projects/crypto-notifier/tracker.py')
+tracker_filename = os.path.join(dir2, 'tracker.py')
