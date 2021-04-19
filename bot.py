@@ -115,7 +115,7 @@ def main():
     global updater, selected_option
 
     selected_option = None
-    with open('editable_params.json') as jsonFile:
+    with open('./Projects/crypto-notifier/editable_params.json') as jsonFile:
         data = json.load(jsonFile)
         params.doge_limits = data
 
