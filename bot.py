@@ -39,67 +39,67 @@ def check_params(update, context):
 # start tracker
 def start_tracker(update, context):
     global tracker_subprocess
-    update.message.reply_text('Started tracker')
+    update.message.reply_text(f'Started tracker')
     fileDir = os.path.dirname(os.path.realpath('/home/pi/Projects/crypto-notifier/tracker.py'))
     filename = os.path.join(fileDir, 'tracker.py')
     tracker_subprocess = subprocess.Popen([sys.executable, filename])
     # tracker_subprocess = subprocess.Popen([sys.executable, 'tracker.py'], stdout=subprocess.PIPE, shell=True)
-    print("Started process: ", tracker_subprocess.pid)
-    print('start_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())
+    print(f'Started process: {tracker_subprocess.pid}')
+    print(f'start_tracker tracker_subprocess.poll(): {tracker_subprocess.poll()}')
 
 # stop tracker
 def stop_tracker(update, context):
     global tracker_subprocess
-    update.message.reply_text('Stopped tracker')
-    print("Killing process: ", tracker_subprocess.pid)
+    update.message.reply_text(f'Stopped tracker')
+    print(f'Killing process: {tracker_subprocess.pid}')
     tracker_subprocess.kill()
-    print('stop_tracker tracker_subprocess.poll(): ', tracker_subprocess.poll())
+    print(f'stop_tracker tracker_subprocess.poll(): {tracker_subprocess.poll()}')
 
 # send_message() on command /check_params
 def set_doge_limits(update: Update, _: CallbackContext) -> int:
     reply_keyboard1 = [['upper'], ['lower']]
-    update.message.reply_text('Pick which limit to edit\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True))
+    update.message.reply_text(f'Pick which limit to edit\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard1, one_time_keyboard=True))
     return UPPERORLOWER
 
 def upper_lower_button(update: Update, _: CallbackContext) -> int:
     global selected_option
     selected_option = update.message.text
-    print("upper_lower_button update.message.text", update.message.text)
-    update.message.reply_text('Editing {} limit\nEnter value for limit\n'.format(update.message.text))
+    print(f'upper_lower_button update.message.text: {update.message.text}')
+    update.message.reply_text(f'Editing {update.message.text} limit\nEnter value for limit\n')
     return UPDATELIMITS
 
 # change values of limits on text
 def price_changer(update: Update, _: CallbackContext) -> int:
     global selected_option
-    print('selected_option: ', selected_option)
-    print("price_changer update.message.text", update.message.text)
-    update.message.reply_text('Set limit to ₹{}\n'.format(update.message.text))
+    print(f'selected_option: {selected_option}')
+    print(f'price_changer update.message.text: {update.message.text}')
+    update.message.reply_text(f'Set limit to ₹{update.message.text}\n')
     if ("upper" == selected_option):
-        print('og params.doge_limits["doge_high"]: ', params.doge_limits["doge_high"])
+        print(f'og params.doge_limits["doge_high"]: {params.doge_limits["doge_high"]}')
         params.doge_limits["doge_high"] = float(update.message.text)
-        print('updated params.doge_limits["doge_high"]: ',  params.doge_limits["doge_high"])
+        print(f'updated params.doge_limits["doge_high"]: {params.doge_limits["doge_high"]}')
     elif ("lower" == selected_option):
-        print('og params.doge_limits["doge_low"]: ',  params.doge_limits["doge_low"])
+        print(f'og params.doge_limits["doge_low"]: {params.doge_limits["doge_low"]}')
         params.doge_limits["doge_low"] = float(update.message.text)
-        print('updated  params.doge_limits["doge_low"]: ',  params.doge_limits["doge_low"])
+        print(f'updated  params.doge_limits["doge_low"]: {params.doge_limits["doge_low"]}')
     save_to_json_file()
     return ConversationHandler.END
 
 # send_message() on command /check_params
 def set_update_rate(update: Update, _: CallbackContext) -> int:
     reply_keyboard = [['5'], ['10'], ['15'], ['30'], ['60']]
-    update.message.reply_text('Pick update rate in seconds\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    update.message.reply_text(f'Pick update rate in seconds\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
     return UPDATERATE
 
 def update_rate_value(update: Update, _: CallbackContext) -> int:
     # print("update.message.text", update.message.text)
-    update.message.reply_text('Update time updated to {} seconds\n'.format(update.message.text))
+    update.message.reply_text(f'Update time updated to {update.message.text} seconds\n')
     params.doge_limits["update_rate"] = float(update.message.text)
     save_to_json_file()
     return ConversationHandler.END
 
 def cancel(update: Update, _: CallbackContext) -> int:
-    update.message.reply_text( 'Bye! I hope we can talk again some day.', reply_markup=ReplyKeyboardRemove() )
+    update.message.reply_text(f'Bye! I hope we can talk again some day.', reply_markup=ReplyKeyboardRemove() )
     return ConversationHandler.END
 
 def main():
