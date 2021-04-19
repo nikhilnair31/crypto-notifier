@@ -36,7 +36,7 @@ def wx_get_btc_price(coin_name):
     response = requests.get(url)
     if('json' in response.headers.get('Content-Type')):
         response_json = response.json()
-        print(f'response_json: {response_json}\n')
+        # print(f'response_json: {response_json}\n')
         doge_price = response_json[coin_name]
         print(f'wx_get_btc_price doge_price[last]: {doge_price["last"]}')
         return float(doge_price['last'])
