@@ -36,12 +36,10 @@ def wx_get_btc_price(coin_name):
     response = requests.get(url)
     if('json' in response.headers.get('Content-Type')):
         response_json = response.json()
-        # print(f'response_json: {response_json}\n')
         doge_price = response_json[coin_name]
-        print(f'wx_get_btc_price doge_price[last]: {doge_price["last"]}')
         return float(doge_price['last'])
     else:
-        return 0.0
+        return None
 
 # compare prices with limits
 def pricer():
@@ -52,10 +50,13 @@ def pricer():
         print(f'data["limit_low"]: {data["limit_low"]}')
         print(f'data["limit_high"]: {data["limit_high"]}')
 
-        if doge_price > data["limit_high"]:
-            send_message(msg=f'DOGE Price Spike Alert: {doge_price}')
-        if doge_price < data["limit_low"]:
-            send_message(msg=f'DOGE Price Drop Alert: {doge_price}')
+        if doge_price == None:
+            print(f'Something messed up at requests.get(url).json()')
+        else:
+            if doge_price > data["limit_high"]:
+                send_message(msg=f'DOGE Price Spike Alert: {doge_price}')
+            if doge_price < data["limit_low"]:
+                send_message(msg=f'DOGE Price Drop Alert: {doge_price}')
         
         get_tweets(params.user_name)
 
