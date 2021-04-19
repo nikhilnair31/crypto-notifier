@@ -34,12 +34,14 @@ def get_tweets(username):
 def wx_get_btc_price(coin_looky):
     url = params.wazirx_url
     response = requests.get(url)
-    print(f'response: {response}\n')
-    response_json = response.json()
-    print(f'response_json: {response_json}\n')
-    doge_price = response_json[coin_looky]
-    print(f'wx_get_btc_price doge_price[last]: {doge_price["last"]}')
-    return float(doge_price['last'])
+    if('json' in response.headers.get('Content-Type')):
+        response_json = response.json()
+        print(f'response_json: {response_json}\n')
+        doge_price = response_json[coin_looky]
+        print(f'wx_get_btc_price doge_price[last]: {doge_price["last"]}')
+        return float(doge_price['last'])
+    else:
+        return 0.0
 
 # compare prices with limits
 def pricer():
