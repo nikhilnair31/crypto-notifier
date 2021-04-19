@@ -1,3 +1,5 @@
+import os
+
 # telegram bot keys
 api_key = 'd3a0e65f-a376-4512-80c1-1472391a929c'
 bot_token = '1697782782:AAH5FsAWh7UBSMZcr0O7iYI2yX35cnJVus8'
@@ -32,3 +34,6 @@ limit_low = 20
 
 # coin params
 doge_limits = {"coin_name": "dogeinr", "limit_high" : 30.0, "limit_low" : 20.0, "update_rate" : 0.1}
+
+dir = os.path.dirname('./Projects/crypto-notifier/editable_params.json')
+filename = os.path.join(dir, 'editable_params.json')
