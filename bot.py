@@ -32,8 +32,8 @@ def check_params(update, context):
     with open(filename) as jsonFile:
         data = json.load(jsonFile)
         update.message.reply_text('coin_looky: '+str(data["coin_looky"])+
-            '\ndoge_low: '+str(data["doge_low"])+
-                '\ndoge_high: '+str(data["doge_high"])+
+            '\nlimit_low: '+str(data["limit_low"])+
+                '\nlimit_high: '+str(data["limit_high"])+
                     '\nupdate_rate: '+str(data["update_rate"]))
 
 # start tracker
@@ -75,13 +75,13 @@ def price_changer(update: Update, _: CallbackContext) -> int:
     print(f'price_changer update.message.text: {update.message.text}')
     update.message.reply_text(f'Set limit to ₹{update.message.text}\n')
     if ("upper" == selected_option):
-        print(f'og params.doge_limits["doge_high"]: {params.doge_limits["doge_high"]}')
-        params.doge_limits["doge_high"] = float(update.message.text)
-        print(f'updated params.doge_limits["doge_high"]: {params.doge_limits["doge_high"]}')
+        print(f'og params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}')
+        params.doge_limits["limit_high"] = float(update.message.text)
+        print(f'updated params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}')
     elif ("lower" == selected_option):
-        print(f'og params.doge_limits["doge_low"]: {params.doge_limits["doge_low"]}')
-        params.doge_limits["doge_low"] = float(update.message.text)
-        print(f'updated  params.doge_limits["doge_low"]: {params.doge_limits["doge_low"]}')
+        print(f'og params.doge_limits["limit_low"]: {params.doge_limits["limit_low"]}')
+        params.doge_limits["limit_low"] = float(update.message.text)
+        print(f'updated  params.doge_limits["limit_low"]: {params.doge_limits["limit_low"]}')
     save_to_json_file()
     return ConversationHandler.END
 

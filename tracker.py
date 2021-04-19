@@ -51,12 +51,12 @@ def pricer():
     with open(filename) as jsonFile:
         data = json.load(jsonFile)
         print(f'doge_price: {doge_price}')
-        print(f'data["doge_low"]: {data["doge_low"]}')
-        print(f'data["doge_high"]: {data["doge_high"]}')
+        print(f'data["limit_low"]: {data["limit_low"]}')
+        print(f'data["limit_high"]: {data["limit_high"]}')
 
-        if doge_price > data["doge_high"]:
+        if doge_price > data["limit_high"]:
             send_message(msg=f'DOGE Price Spike Alert: {str(doge_price)}')
-        if doge_price < data["doge_low"]:
+        if doge_price < data["limit_low"]:
             send_message(msg=f'DOGE Price Drop Alert: {str(doge_price)}')
         
         get_tweets(params.user_name)
