@@ -12,7 +12,7 @@ from telegram.callbackquery import CallbackQuery
 from telegram.update import Update
 from telegram.message import Message
 
-UPPERORLOWER, UPDATELIMITS, UPDATERATE = range(3)
+UPPERORLOWER, UPDATELIMITS, UPDATERATE, UPDATECOINNAME = range(4)
 
 # called to open json file and dump params.doge_limits
 def save_to_json_file():
@@ -85,16 +85,29 @@ def price_changer(update: Update, _: CallbackContext) -> int:
     save_to_json_file()
     return ConversationHandler.END
 
-# send_message() on command /check_params
+# on command /set_update_rate show options and reply message
 def set_update_rate(update: Update, _: CallbackContext) -> int:
-    reply_keyboard = [['5'], ['10'], ['15'], ['30'], ['60']]
-    update.message.reply_text(f'Pick update rate in seconds\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    reply_keyboard2 = [['5'], ['10'], ['15'], ['30'], ['60']]
+    update.message.reply_text(f'Pick update rate in seconds\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True))
     return UPDATERATE
 
+# reply to previous choice and save the value to params.doge_limits dict and then to save_to_json_file()
 def update_rate_value(update: Update, _: CallbackContext) -> int:
-    # print("update.message.text", update.message.text)
     update.message.reply_text(f'Update time updated to {update.message.text} seconds\n')
     params.doge_limits["update_rate"] = float(update.message.text)
+    save_to_json_file()
+    return ConversationHandler.END
+
+# on command /set_coin_name show options and reply message
+def set_coin_name(update: Update, _: CallbackContext) -> int:
+    reply_keyboard3 = [['btcinr'], ['ethinr'], ['dogeinr'], ['xrpinr'], ['trxinr'], ['bttinr']]
+    update.message.reply_text(f'Pick coin name to track\n', reply_markup=ReplyKeyboardMarkup(reply_keyboard3, one_time_keyboard=True))
+    return UPDATECOINNAME
+
+def coin_name_value(update: Update, _: CallbackContext) -> int:
+    # print("update.message.text", update.message.text)
+    update.message.reply_text(f'Coin name updated to {update.message.text}\n')
+    params.doge_limits["coin_looky"] = float(update.message.text)
     save_to_json_file()
     return ConversationHandler.END
 
@@ -132,6 +145,12 @@ def main():
         fallbacks=[CommandHandler('cancel', cancel)]
     )
     dispatcher.add_handler(conv_handler2)
+    conv_handler3 = ConversationHandler(
+        entry_points=[CommandHandler('set_coin_name', set_coin_name)],
+        states={UPDATECOINNAME: [MessageHandler(Filters.text, coin_name_value)]},
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
+    dispatcher.add_handler(conv_handler3)
 
     updater.start_polling()
     updater.idle()
