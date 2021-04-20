@@ -65,7 +65,7 @@ def main():
     init_twitter()
     while True:
         pricer()
-        time.sleep(params.doge_limits["time_interval"])
+        time.sleep(params.doge_limits["update_rate"])
 
 if __name__ == '__main__':
     main()
