@@ -35,6 +35,7 @@ def get_params(update, context):
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
         params.doge_limits = data
+        print(f'get_params:\n {params.doge_limits}\n\n')
 
 # start tracker
 def start_tracker(update, context):
