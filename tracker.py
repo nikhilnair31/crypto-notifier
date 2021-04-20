@@ -49,6 +49,7 @@ def pricer():
         print(f'data["coin_name"]: {data["coin_name"]}')
         print(f'data["limit_low"]: {data["limit_low"]}')
         print(f'data["limit_high"]: {data["limit_high"]}')
+        print(f'coin_price: {coin_price}')
 
         if coin_price == None:
             print(f'Something messed up at requests.get(url).json()')
