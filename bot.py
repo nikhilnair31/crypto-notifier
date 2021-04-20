@@ -35,20 +35,20 @@ def get_params(update, context):
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
         params.doge_limits = data
-        print(f'get_params:\n {params.doge_limits}\n\n')
+        print(f'\nget_params:\n params.doge_limits:\n{params.doge_limits} data:\n{data}\n')
 
 # start tracker
 def start_tracker(update, context):
     global tracker_subprocess
     update.message.reply_text(f'Started tracker for coin')
     tracker_subprocess = subprocess.Popen([sys.executable, params.tracker_filename])
-    print(f'Started process: {tracker_subprocess.pid}\n\n')
+    print(f'Started process: {tracker_subprocess.pid}\n')
 
 # stop tracker
 def stop_tracker(update, context):
     global tracker_subprocess
     update.message.reply_text(f'Stopped tracker')
-    print(f'Killing process: {tracker_subprocess.pid}\n\n')
+    print(f'Killing process: {tracker_subprocess.pid}\n')
     tracker_subprocess.kill()
 
 # reply text on command /set_price_limits and show keyboard options
@@ -69,16 +69,16 @@ def upper_lower_button(update: Update, _: CallbackContext) -> int:
 def price_changer(update: Update, _: CallbackContext) -> int:
     global selected_option
     print(f'selected_option: {selected_option}\n\n')
-    print(f'price_changer update.message.text: {update.message.text}\n\n')
+    print(f'price_changer update.message.text: {update.message.text}\n')
     update.message.reply_text(f'Set limit to ₹{update.message.text}\n')
     if ("upper" == selected_option):
-        print(f'og params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}\n\n')
+        print(f'og params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}\n')
         params.doge_limits["limit_high"] = float(update.message.text)
-        print(f'updated params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}\n\n')
+        print(f'updated params.doge_limits["limit_high"]: {params.doge_limits["limit_high"]}\n')
     elif ("lower" == selected_option):
         print(f'og params.doge_limits["limit_low"]: {params.doge_limits["limit_low"]}\n\n')
         params.doge_limits["limit_low"] = float(update.message.text)
-        print(f'updated  params.doge_limits["limit_low"]: {params.doge_limits["limit_low"]}\n\n')
+        print(f'updated  params.doge_limits["limit_low"]: {params.doge_limits["limit_low"]}\n')
     save_to_json_file()
     return ConversationHandler.END
 
