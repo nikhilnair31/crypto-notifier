@@ -36,27 +36,27 @@ def wx_get_btc_price(coin_name):
     response = requests.get(url)
     if('json' in response.headers.get('Content-Type')):
         response_json = response.json()
-        doge_price = response_json[coin_name]
-        return float(doge_price['last'])
+        coin_price = response_json[coin_name]
+        return float(coin_price['last'])
     else:
         return None
 
 # compare prices with limits
 def pricer():
-    doge_price = wx_get_btc_price(params.coin_name)
     with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
-        print(f'doge_price: {doge_price}')
+        coin_price = wx_get_btc_price(data["coin_name"])
+        print(f'data["coin_name"]: {data["coin_name"]}')
         print(f'data["limit_low"]: {data["limit_low"]}')
         print(f'data["limit_high"]: {data["limit_high"]}')
 
-        if doge_price == None:
+        if coin_price == None:
             print(f'Something messed up at requests.get(url).json()')
         else:
-            if doge_price > data["limit_high"]:
-                send_message(msg=f'Price Spike Alert: {doge_price}')
-            if doge_price < data["limit_low"]:
-                send_message(msg=f'Price Drop Alert: {doge_price}')
+            if coin_price > data["limit_high"]:
+                send_message(msg=f'Price Spike Alert: {coin_price}')
+            if coin_price < data["limit_low"]:
+                send_message(msg=f'Price Drop Alert: {coin_price}')
         
         get_tweets(params.user_name)
 
