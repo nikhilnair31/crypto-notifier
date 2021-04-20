@@ -35,11 +35,16 @@ def get_params(update, context):
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
         params.doge_limits = data
-        print(f'\nget_params:\n params.doge_limits:\n{params.doge_limits} data:\n{data}\n')
+        print(f'\nget_params:\nparams.doge_limits: {params.doge_limits}\ndata:\n{data}\n')
 
 # start tracker
 def start_tracker(update, context):
     global tracker_subprocess
+
+    with open(params.editable_params_filename) as jsonFile:
+        data = json.load(jsonFile)
+        params.doge_limits = data
+
     update.message.reply_text(f'Started tracker for coin')
     tracker_subprocess = subprocess.Popen([sys.executable, params.tracker_filename])
     print(f'Started process: {tracker_subprocess.pid}\n')
@@ -47,6 +52,7 @@ def start_tracker(update, context):
 # stop tracker
 def stop_tracker(update, context):
     global tracker_subprocess
+    
     update.message.reply_text(f'Stopped tracker')
     print(f'Killing process: {tracker_subprocess.pid}\n')
     tracker_subprocess.kill()
@@ -117,10 +123,7 @@ def main():
     global updater, selected_option
 
     selected_option = None
-    with open(params.editable_params_filename) as jsonFile:
-        data = json.load(jsonFile)
-        params.doge_limits = data
-
+    
     updater = Updater(params.bot_token)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start_tracker', start_tracker))
