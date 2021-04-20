@@ -7,6 +7,12 @@ import requests
 import time
 import json
 
+# called to open json file and dump params.doge_limits
+def get_from_json_file(key):
+    with open(params.editable_params_filename) as jsonFile:
+        data = json.load(jsonFile)
+        return data[key]
+
 # initialize twitter api
 def init_twitter():
     global api
@@ -65,8 +71,9 @@ def main():
     init_twitter()
     while True:
         pricer()
-        print(f'params.doge_limits["update_rate"]: {params.doge_limits["update_rate"]}')
-        time.sleep(params.doge_limits["update_rate"])
+        print(f'params.doge_limits["update_rate"]: {params.doge_limits["update_rate"]}\n'
+            f'get_from_json_file("update_rate"): {get_from_json_file("update_rate")}')
+        time.sleep(get_from_json_file("update_rate"))
 
 if __name__ == '__main__':
     main()
