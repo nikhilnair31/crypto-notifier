@@ -7,7 +7,7 @@ import requests
 import time
 import json
 
-# called to open json file and dump params.doge_limits
+# called to open json file and return value based on key as parameter
 def get_from_json_file(key):
     with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
@@ -52,10 +52,10 @@ def pricer():
     with open(params.editable_params_filename) as jsonFile:
         data = json.load(jsonFile)
         coin_price = wx_get_btc_price(data["coin_name"])
-        print(f'data["coin_name"]: {data["coin_name"]}')
-        print(f'data["limit_low"]: {data["limit_low"]}')
-        print(f'data["limit_high"]: {data["limit_high"]}')
-        print(f'coin_price: {coin_price}')
+        print(f'data["coin_name"]: {data["coin_name"]}\n'
+            f'data["limit_low"]: {data["limit_low"]}\n'
+                f'data["limit_high"]: {data["limit_high"]}\n'
+                    f'coin_price: {coin_price}\n')
 
         if coin_price == None:
             print(f'Something messed up at requests.get(url).json()')
@@ -71,8 +71,6 @@ def main():
     init_twitter()
     while True:
         pricer()
-        print(f'params.doge_limits["update_rate"]: {params.doge_limits["update_rate"]}\n'
-            f'get_from_json_file("update_rate"): {get_from_json_file("update_rate")}')
         time.sleep(get_from_json_file("update_rate"))
 
 if __name__ == '__main__':

@@ -114,8 +114,7 @@ def cancel(update: Update, _: CallbackContext) -> int:
     return ConversationHandler.END
 
 def main():
-    global updater, selected_option
-
+    global selected_option
     selected_option = None
     
     updater = Updater(params.bot_token)
