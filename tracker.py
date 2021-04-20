@@ -54,9 +54,9 @@ def pricer():
             print(f'Something messed up at requests.get(url).json()')
         else:
             if doge_price > data["limit_high"]:
-                send_message(msg=f'DOGE Price Spike Alert: {doge_price}')
+                send_message(msg=f'Price Spike Alert: {doge_price}')
             if doge_price < data["limit_low"]:
-                send_message(msg=f'DOGE Price Drop Alert: {doge_price}')
+                send_message(msg=f'Price Drop Alert: {doge_price}')
         
         get_tweets(params.user_name)
 

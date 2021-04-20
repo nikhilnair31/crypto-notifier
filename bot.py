@@ -34,6 +34,7 @@ def get_params(update, context):
         data = json.load(jsonFile)
         update.message.reply_text(f'coin_name: {data["coin_name"]}\nlimit_low: {data["limit_low"]}\n'
             f'limit_high: {data["limit_high"]}\nupdate_rate: {data["update_rate"]}')
+        params.doge_limits = data
 
 # start tracker
 def start_tracker(update, context):
@@ -59,8 +60,8 @@ def set_price_limits(update: Update, _: CallbackContext) -> int:
 def upper_lower_button(update: Update, _: CallbackContext) -> int:
     global selected_option
     selected_option = update.message.text
-    print(f'upper_lower_button update.message.text: {update.message.text}\n\n')
-    update.message.reply_text(f'Editing {update.message.text} limit\nEnter value for limit\n')
+    print(f'upper_lower_button update.message.text: {selected_option}\n\n')
+    update.message.reply_text(f'Editing {selected_option} limit\nEnter value for limit\n')
     return UPDATELIMITS
 
 # reply text and change values of limits first for doge_limits dict which is then saved to json file using save_to_json_file()
